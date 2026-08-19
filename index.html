@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WR.Forge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap&subset=cyrillic,latin" rel="stylesheet">
+    <style>
+        :root {
+            --hoi4-bg: #1a1a1a; --hoi4-panel: #242424; --hoi4-green: #4b5320;
+            --hoi4-green-hover: #5a6328; --hoi4-text: #c0c0c0; --hoi4-text-bright: #e0e0e0;
+            --hoi4-border: #3d3d3d; --hoi4-accent: #788a48;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', 'Courier New', monospace !important; }
+        html, body { background-color: var(--hoi4-bg); color: var(--hoi4-text); line-height: 1.5; font-size: 14px; }
+        body, button, input, textarea, select, a, p, div, span, label, li, ul, ol { font-family: 'Courier Prime', 'Courier New', monospace; }
+        .header { padding: 20px 24px; display: flex; align-items: center; gap: 12px; background-color: var(--hoi4-panel); border-bottom: 2px solid var(--hoi4-border); }
+        .logo-square { width: 36px; height: 36px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); object-fit: cover; display: block; }
+        .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--hoi4-text-bright); text-transform: uppercase; }
+        .nav { display: flex; justify-content: flex-start; gap: 4px; padding: 0 24px; background-color: var(--hoi4-panel); border-bottom: 1px solid var(--hoi4-border); position: sticky; top: 0; z-index: 100; }
+        .nav-btn { background: transparent; border: 1px solid transparent; border-bottom: 3px solid transparent; color: var(--hoi4-text); font-family: 'Courier Prime', monospace; font-size: 13px; padding: 12px 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .nav-btn:hover { background-color: rgba(75, 83, 32, 0.3); color: var(--hoi4-text-bright); }
+        .nav-btn.active { background-color: var(--hoi4-green); border: 1px solid var(--hoi4-accent); border-bottom: 3px solid var(--hoi4-accent); color: #ffffff; }
+        .nav-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        @media (max-width: 600px) {
+            .nav { justify-content: space-around; padding: 0; }
+            .nav-btn { padding: 12px 8px; flex-direction: column; gap: 4px; font-size: 0; flex: 1; justify-content: center; }
+            .nav-btn.active { font-size: 11px; flex-direction: row; gap: 6px; border: 1px solid var(--hoi4-accent); border-bottom: 3px solid var(--hoi4-accent); }
+            .nav-btn svg { width: 20px; height: 20px; }
+        }
+        .content { padding: 32px 24px; max-width: 1000px; margin: 0 auto; display: none; }
+        .content.active { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .about-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px; }
+        .about-img { width: 160px; height: 160px; background-color: var(--hoi4-panel); border: 2px solid var(--hoi4-border); margin-bottom: 20px; display: block; object-fit: cover; }
+        .about-title { font-size: 16px; font-weight: 700; color: var(--hoi4-accent); margin-bottom: 20px; max-width: 700px; line-height: 1.4; text-transform: uppercase; }
+        .about-text { font-size: 14px; margin-bottom: 24px; text-align: left; border-left: 4px solid var(--hoi4-green); padding: 12px 16px; background-color: rgba(75, 83, 32, 0.1); }
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+        @media (max-width: 600px) { .gallery { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 12px; scroll-snap-type: x mandatory; } .gallery-item { min-width: 260px; scroll-snap-align: start; } }
+        .gallery-item { aspect-ratio: 16/9; background-color: var(--hoi4-panel); border: 1px solid var(--hoi4-border); display: block; object-fit: cover; width: 100%; }
+        .disclaimer { font-size: 12px; color: #777; border-top: 1px solid var(--hoi4-border); border-bottom: 1px solid var(--hoi4-border); padding: 16px; margin-top: 32px; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
+        .search-bar { width: 100%; padding: 12px; background-color: var(--hoi4-bg); border: 1px solid var(--hoi4-border); color: var(--hoi4-text-bright); font-family: 'Courier Prime', monospace; font-size: 14px; margin-bottom: 24px; outline: none; text-transform: uppercase; }
+        .search-bar:focus { border-color: var(--hoi4-accent); background-color: #111; }
+        .news-item { padding: 24px 0; border-bottom: 1px solid var(--hoi4-border); }
+        .news-title { font-size: 16px; font-weight: 700; color: var(--hoi4-text-bright); margin-bottom: 8px; text-transform: uppercase; }
+        .news-date { font-size: 12px; color: var(--hoi4-accent); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .news-text { font-size: 14px; line-height: 1.6; }
+        .catalog-controls { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { background-color: var(--hoi4-panel); border: 1px solid var(--hoi4-border); color: var(--hoi4-text); font-family: 'Courier Prime', monospace; font-size: 12px; padding: 8px 16px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
+        .filter-btn:hover, .filter-btn.active { background-color: var(--hoi4-green); border-color: var(--hoi4-accent); color: #fff; }
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tag { font-size: 11px; color: #888; background-color: #111; padding: 4px 10px; border: 1px solid #333; text-transform: uppercase; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .catalog-item { background-color: var(--hoi4-panel); border: 1px solid var(--hoi4-border); padding: 0; cursor: pointer; transition: border-color 0.15s, transform 0.1s; }
+        .catalog-item:hover { border-color: var(--hoi4-accent); transform: translateY(-2px); }
+        .catalog-image-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, rgba(75,83,32,0.18), rgba(120,138,72,0.08)); border-bottom: 1px solid var(--hoi4-border); overflow: hidden; }
+        .catalog-img { width: 100%; height: 100%; display: block; background-color: #111; object-fit: cover; }
+        .catalog-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--hoi4-text); text-transform: uppercase; letter-spacing: 1px; font-size: 11px; background: repeating-linear-gradient(135deg, rgba(75,83,32,0.18), rgba(75,83,32,0.18) 8px, rgba(26,26,26,0.7) 8px, rgba(26,26,26,0.7) 16px); }
+        .catalog-info { padding: 16px; }
+        .catalog-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--hoi4-text-bright); text-transform: uppercase; }
+        .catalog-meta { font-size: 12px; color: #888; display: flex; justify-content: flex-start; border-top: 1px solid var(--hoi4-border); padding-top: 12px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: var(--hoi4-panel); border: 2px solid var(--hoi4-accent); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: none; border: 1px solid var(--hoi4-border); color: var(--hoi4-text); width: 32px; height: 32px; cursor: pointer; font-family: 'Courier Prime', monospace; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .modal-close:hover { background-color: var(--hoi4-green); color: #fff; }
+        .modal-header-img { width: 100%; aspect-ratio: 21/9; background-color: #111; border-bottom: 2px solid var(--hoi4-border); object-fit: cover; }
+        .modal-body { padding: 24px; }
+        .modal-title { font-size: 20px; font-weight: 700; color: var(--hoi4-text-bright); text-transform: uppercase; margin-bottom: 8px; }
+        .modal-meta { font-size: 12px; color: var(--hoi4-accent); margin-bottom: 24px; text-transform: uppercase; }
+        .download-btn { display: block; width: 100%; padding: 16px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); color: #ffffff; font-family: 'Courier Prime', monospace; font-size: 16px; font-weight: 700; text-transform: uppercase; text-align: center; cursor: pointer; margin-bottom: 24px; text-decoration: none; letter-spacing: 1px; }
+        .download-btn:hover { background-color: var(--hoi4-green-hover); }
+        .modal-section-title { font-size: 14px; font-weight: 700; color: var(--hoi4-text-bright); text-transform: uppercase; border-bottom: 1px solid var(--hoi4-border); padding-bottom: 8px; margin-bottom: 16px; }
+        .review-item { background-color: var(--hoi4-bg); border: 1px solid var(--hoi4-border); padding: 12px; margin-bottom: 12px; }
+        .review-author { font-size: 12px; color: var(--hoi4-accent); margin-bottom: 4px; text-transform: uppercase; }
+        .review-text { font-size: 13px; color: var(--hoi4-text); }
+        .footer { margin-top: 64px; padding: 32px 24px; border-top: 2px solid var(--hoi4-border); background-color: var(--hoi4-panel); text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+        .footer-link { color: var(--hoi4-text); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--hoi4-border); padding: 8px 16px; transition: all 0.15s; }
+        .footer-link:hover { border-color: var(--hoi4-accent); color: var(--hoi4-accent); background-color: rgba(75, 83, 32, 0.2); }
+        .footer-copy { font-size: 11px; color: #555; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img class="logo-square" src="assets/img/logo.jpg" alt="WR.Forge logo" onerror="this.onerror=null;this.src='assets/img/logowrforge.jpg';">
+        <div class="logo-text">WR.Forge</div>
+    </div>
+    <nav class="nav">
+        <button class="nav-btn active" onclick="showTab('about', this)"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span>О сайте</span></button>
+        <button class="nav-btn" onclick="showTab('news', this)"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg><span>Новости</span></button>
+        <button class="nav-btn" onclick="showTab('catalog', this)"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Каталог</span></button>
+    </nav>
+
+    <div id="about" class="content active">
+        <div class="about-header">
+            <img class="about-img" src="assets/img/leaderpinguin.jpg" alt="Leader Pinguin portrait">
+            <div class="about-title">Вождь Пингвин — Генералиссимус, Верховный главнокомандующий, Генеральный секретарь, Великий стратег и магистр, Протектор, Пожизненный президент, Солнце нации Пингвинов</div>
+        </div>
+        <div class="about-text">Сайт разработан для публикации карт и сценариев от @LeaderPinguin для лучшей видео игры гранд стратегии на телефоны Warnament.</div>
+        <div class="gallery" id="galleryGrid">
+            <img class="gallery-item" src="assets/img/Euro3forMobile.jpg" alt="Euro3 by LeaderPinguin">
+            <img class="gallery-item" src="assets/img/Great_War.jpg" alt="Euro3 1914">
+            <img class="gallery-item" src="assets/img/WWII.jpg" alt="Euro3 1936 Ru">
+            <img class="gallery-item" src="assets/img/TRM.jpg" alt="Euro3 1936 TRM">
+            <img class="gallery-item" src="assets/img/Kaiserreich.jpg" alt="Kaiserreich">
+            <img class="gallery-item" src="assets/img/nothing.jpg" alt="Nothing">
+        </div>
+        <div class="about-text">Сайт не получает никакой финансовой, или любой другой коммерческой прибыли, и является чисто фанатским проектом. Все права на игру Warnament принадлежат её законным владельцам. Данный ресурс создан @LeaderPinguin для сообщества.</div>
+    </div>
+
+    <div id="news" class="content">
+        <input type="text" class="search-bar" placeholder="ПОИСК ПО НОВОСТЯМ..." onkeyup="filterNews(this.value)">
+        <div class="news-list" id="newsList">
+            <div class="news-item">
+                <div class="news-title">Запуск сайта!</div>
+                <div class="news-date">19 Августа 2026</div>
+                <div class="news-text">Сегодня я выпускаю этот сайт с картами и сценариями что я предпочел выложить, проводим тестирование сайта, надеюсь все работает корректно а то я уже запарился, но я доволен.</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="catalog" class="content">
+        <div class="catalog-controls">
+            <input type="text" class="search-bar" placeholder="ПОИСК ПО НАЗВАНИЮ..." onkeyup="filterCatalog(this.value)">
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterType('Все', this)">ВСЕ</button>
+                <button class="filter-btn" onclick="filterType('Карта', this)">КАРТЫ</button>
+                <button class="filter-btn" onclick="filterType('Сценарий', this)">СЦЕНАРИИ</button>
+                <button class="filter-btn" onclick="filterType('Мод', this)">МОДЫ</button>
+            </div>
+        </div>
+        <div class="catalog-grid" id="catalogGrid">
+            <div class="catalog-item" data-type="Карта" onclick="openModal('Cheaux', 'Карта', '', '', 'Вымешленный мир, есть две версии лора, смотрите в сценариях.', 'assets/img/maps/Cheaux.map', 'assets/img/nothingcheaux.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/nothingcheaux.jpg" class="catalog-img" alt="Cheaux"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Cheaux</div>
+                    <div class="catalog-meta"><span>ТИП: КАРТА</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Карта" onclick="openModal('Euro3 by LeaderPinguin | 618 провинций', 'Карта', 'Best by LeaderPinguin', '', 'Моя лучшая и любимая карта, почти повторяет провинции из HOI4, очень качественная и хорошо едет на телефонах по сравнению там с Euro4', 'assets/img/maps/Euro3_by_LeaderPinguin.map', 'assets/img/Euro3forMobile.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/Euro3forMobile.jpg" class="catalog-img" alt="Euro3 by LeaderPinguin"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Euro3 by LeaderPinguin | 618 провинций</div>
+                    <div class="catalog-meta"><span>ТИП: КАРТА</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Карта" onclick="openModal('Standard_Europe_Plus_by_LeaderPinguin | 387 провинций', 'Карта', '4.7', '97', 'Расширенная с нуля созданная карта европы джанхулда на кавказ.', 'assets/img/maps/Standard_Europe_Plus_by_LeaderPinguin', '')">
+                <div class="catalog-image-wrap"><div class="catalog-placeholder">NO IMAGE</div></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Standard_Europe_Plus_by_LeaderPinguin | 387 провинций</div>
+                    <div class="catalog-meta"><span>ТИП: КАРТА</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Euro3 | 1914 Eng', 'Сценарий', 'Scenario', '0', 'Сценарий для Euro3: 1914, английская версия.', 'assets/img/maps/scenarios/Euro3_1914_Eng.json', 'assets/img/Great_War.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/Great_War.jpg" class="catalog-img" alt="Euro3 1914 Eng"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Euro3 | 1914 Eng</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Euro3 | 1936 Ru', 'Сценарий', 'Scenario', '0', 'Сценарий для Euro3: 1936, русская версия. Лучший сценарий на эту карту, очень советую', 'assets/img/maps/scenarios/Euro3_1936_Ru.json', 'assets/img/WWII.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/WWII.jpg" class="catalog-img" alt="Euro3 1936 Ru"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Euro3 | 1936 Ru</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Euro3 | 1936 TRM', 'Сценарий', 'Scenario', '0', 'Сценарий для Euro3: 1936, Альтенативная история европы, зеркальная нашему миру', 'assets/img/maps/scenarios/Euro3_1936_TRM.json', 'assets/img/TRM.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/TRM.jpg" class="catalog-img" alt="Euro3 1936 TRM"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Euro3 | 1936 TRM</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Euro3 | Kaiserreich Eng', 'Сценарий', 'Scenario', '0', 'Сценарий для Euro3: Kaiserreich, английская версия.', 'assets/img/maps/scenarios/Euro3_Kaiserreich_Eng.json', 'assets/img/Kaiserreich.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/Kaiserreich.jpg" class="catalog-img" alt="Kaiserreich"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Euro3 | Kaiserreich Eng</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Euro3 | Nothing', 'Сценарий', 'Scenario', '0', 'Дополнительный сценарный файл для Euro3 без конкретного сценария.', 'assets/img/maps/scenarios/Euro3_nothing.json', 'assets/img/nothing.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/nothing.jpg" class="catalog-img" alt="Euro3 Nothing"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Euro3 | Nothing</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Cheux | 968 by Pinguin', 'Сценарий', 'Scenario', '0', 'Сценарий Cheux: 968 by Pinguin.', 'assets/img/maps/scenarios/Cheux_968_by_Pinguin.json', 'assets/img/cheauxbase.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/cheauxbase.jpg" class="catalog-img" alt="Cheux 968"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Cheux | 968 by Pinguin</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+
+            <div class="catalog-item" data-type="Сценарий" onclick="openModal('Cheux | Vertland Civil War', 'Сценарий', 'Scenario', '0', 'Сценарий Cheux: Vertland Civil War.', 'assets/img/maps/scenarios/vertlandcivilwar.json', 'assets/img/civilcheaux.jpg')">
+                <div class="catalog-image-wrap"><img src="assets/img/civilcheaux.jpg" class="catalog-img" alt="Vertland Civil War"></div>
+                <div class="catalog-info">
+                    <div class="catalog-title">Cheux | Vertland Civil War</div>
+                    <div class="catalog-meta"><span>ТИП: СЦЕНАРИЙ</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="catalogModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <img id="modalImg" class="modal-header-img" src="" alt="">
+            <div class="modal-body">
+                <div class="modal-title" id="modalTitle">Название</div>
+                <div class="modal-meta" id="modalMeta">ТИП: КАРТА</div>
+                <a href="#" id="modalDownload" class="download-btn" target="_blank" rel="noopener">СКАЧАТЬ ФАЙЛ</a>
+                <div class="modal-section-title">ОПИСАНИЕ</div>
+                <p id="modalDesc" style="margin-bottom: 24px; font-size: 13px; line-height: 1.6; white-space: pre-wrap;"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://discord.com/invite/2t6vqYjjG8" class="footer-link" target="_blank">DISCORD</a>
+            <a href="https://play.google.com/store/apps/details?id=com.ludenio.a7&hl=en" class="footer-link" target="_blank">PLAY MARKET</a>
+            <a href="https://apps.apple.com/" class="footer-link" target="_blank">APP STORE</a>
+            <a href="https://ludenio.itch.io/warnament" class="footer-link" target="_blank">ITCH.IO</a>
+            <a href="https://store.steampowered.com/app/1201700/Warnament/" class="footer-link" target="_blank">STEAM</a>
+            <a href="https://warnament.com/" class="footer-link" target="_blank">WARNAMENT.COM</a>
+        </div>
+        <div class="footer-copy">© 2026 WR.Forge</div>
+    </footer>
+
+    <script>
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+        function filterNews(query) {
+            const items = document.querySelectorAll('.news-item');
+            const lowerQuery = query.toLowerCase();
+            items.forEach(item => { item.style.display = item.innerText.toLowerCase().includes(lowerQuery) ? 'block' : 'none'; });
+        }
+        function filterCatalog(query) {
+            const items = document.querySelectorAll('.catalog-item');
+            const lowerQuery = query.toLowerCase();
+            items.forEach(item => { item.style.display = item.innerText.toLowerCase().includes(lowerQuery) ? 'block' : 'none'; });
+        }
+        function filterType(type, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const items = document.querySelectorAll('.catalog-item');
+            items.forEach(item => {
+                if (type === 'Все' || item.dataset.type === type) item.style.display = 'block';
+                else item.style.display = 'none';
+            });
+        }
+        function openModal(title, type, rating, reviews, desc, file, img) {
+            const modalDownload = document.getElementById('modalDownload');
+            const modalImg = document.getElementById('modalImg');
+            const modalMeta = document.getElementById('modalMeta');
+            const modalDesc = document.getElementById('modalDesc');
+            document.getElementById('modalTitle').innerText = title;
+            if (modalMeta) {
+                modalMeta.innerText = `ТИП: ${String(type || 'Карта').toUpperCase()}`;
+            }
+            if (modalDesc) {
+                modalDesc.innerText = desc || 'Описание отсутствует.';
+            }
+            if (modalDownload) {
+                modalDownload.href = file || '#';
+                modalDownload.setAttribute('download', title || 'map-file');
+                modalDownload.style.display = file ? 'block' : 'none';
+            }
+            if (img && img.trim()) {
+                modalImg.src = img;
+                modalImg.style.display = 'block';
+            } else {
+                modalImg.removeAttribute('src');
+                modalImg.style.display = 'none';
+            }
+            document.getElementById('catalogModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(event) {
+            if (!event || event.target.id === 'catalogModal' || event.target.classList.contains('modal-close')) {
+                document.getElementById('catalogModal').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+        // Динамическая загрузка `data.json` временно удалена по запросу — восстановите статические заглушки вручную, если нужно.
+        console.log('data.json fetch removed — static content assumed.');
+    </script>
+</body>
+</html>

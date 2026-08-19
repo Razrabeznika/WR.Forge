@@ -1,0 +1,98 @@
+{
+  "news": [
+    {
+      "title": "Запуск сайта!",
+      "date": "19 Августа 2026",
+      "text": "Сегодня я выпускаю этот сайт с картами и сценариями что я предпочел выложить, проводим тестирование сайта, надеюсь все работает корректно а то я уже запарился, но я доволен."
+    }
+  ],
+  "catalog": [
+    {
+      "title": "Cheaux",
+      "type": "Карта",
+      "description": "Вымешленный мир, есть две версии лора, смотрите в сценариях.",
+      "file": "assets/img/maps/Cheaux.map",
+      "image": "assets/img/nothingcheaux.jpg"
+    },
+    {
+      "title": "Euro3 by LeaderPinguin | 618 провинций",
+      "type": "Карта",
+      "rating": "Best by LeaderPinguin",
+      "description": "Моя лучшая и любимая карта, почти повторяет провинции из HOI4, очень качественная и хорошо едет на телефонах по сравнению там с Euro4",
+      "file": "assets/img/maps/Euro3_by_LeaderPinguin.map",
+      "image": "assets/img/Euro3forMobile.jpg"
+    },
+    {
+      "title": "Standard Europe Plus by LeaderPinguin | 387 провинций",
+      "type": "Карта",
+      "rating": "4.7",
+      "reviews": "97",
+      "description": "Расширенная с нуля созданная карта европы джанхулда на кавказ.",
+      "file": "assets/img/maps/Standard_Europe_Plus_by_LeaderPinguin",
+      "image": ""
+    },
+    {
+      "title": "Euro3 | 1914 Eng",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Сценарий для Euro3: 1914, английская версия.",
+      "file": "assets/img/maps/scenarios/Euro3_1914_Eng.json",
+      "image": "assets/img/Great War.jpg"
+    },
+    {
+      "title": "Euro3 | 1936 Ru",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Сценарий для Euro3: 1936, русская версия. Лучший сценарий на эту карту, очень советую",
+      "file": "assets/img/maps/scenarios/Euro3_1936_Ru.json",
+      "image": "assets/img/WWII.jpg"
+    },
+    {
+      "title": "Euro3 | 1936 TRM",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Сценарий для Euro3: 1936, Альтенативная история европы, зеркальная нашему миру",
+      "file": "assets/img/maps/scenarios/Euro3_1936_TRM.json",
+      "image": "assets/img/TRM.jpg"
+    },
+    {
+      "title": "Euro3 | Kaiserreich Eng",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Сценарий для Euro3: Kaiserreich, английская версия.",
+      "file": "assets/img/maps/scenarios/Euro3_Kaiserreich_Eng.json",
+      "image": "assets/img/Kaiserreich.jpg"
+    },
+    {
+      "title": "Euro3 | Nothing",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Дополнительный сценарный файл для Euro3 без конкретного сценария.",
+      "file": "assets/img/maps/scenarios/Euro3_nothing.json",
+      "image": "assets/img/nothing.jpg"
+    },
+    {
+      "title": "Cheux | 968 by Pinguin",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Сценарий Cheux: 968 by Pinguin.",
+      "file": "assets/img/maps/scenarios/Cheux_968_by_Pinguin.json",
+      "image": "assets/img/cheauxbase.jpg"
+    },
+    {
+      "title": "Cheux | Vertland Civil War",
+      "type": "Сценарий",
+      "rating": "Scenario",
+      "reviews": "0",
+      "description": "Сценарий Cheux: Vertland Civil War.",
+      "file": "assets/img/maps/scenarios/vertlandcivilwar.json",
+      "image": "assets/img/civilcheaux.jpg"
+    }
+  ]
+}
