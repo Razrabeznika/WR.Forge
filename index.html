@@ -280,8 +280,18 @@
             }
             if (modalDownload) {
                 modalDownload.href = file || '#';
-                modalDownload.setAttribute('download', title || 'map-file');
-                modalDownload.style.display = file ? 'block' : 'none';
+                try {
+                    const url = String(file || '');
+                    const m = url.match(/\.([a-z0-9]+)(?:\?.*)?$/i);
+                    const ext = m ? m[1] : '';
+                    const safeTitle = String(title || 'map-file').replace(/[^a-z0-9.\-_]/gi, '_');
+                    const downloadName = ext ? `${safeTitle}.${ext}` : safeTitle;
+                    modalDownload.setAttribute('download', downloadName);
+                    modalDownload.style.display = file ? 'block' : 'none';
+                } catch (e) {
+                    modalDownload.setAttribute('download', title || 'map-file');
+                    modalDownload.style.display = file ? 'block' : 'none';
+                }
             }
             if (img && img.trim()) {
                 modalImg.src = img;
