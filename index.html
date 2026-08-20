@@ -14,6 +14,8 @@
             font-weight: 400;
             font-style: normal;
             font-display: swap;
+            /* Limit this self-hosted face to Latin ranges so Cyrillic falls back */
+            unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF;
         }
         @font-face {
             font-family: 'Courier Prime';
@@ -22,6 +24,7 @@
             font-weight: 700;
             font-style: normal;
             font-display: swap;
+            unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF;
         }
         @font-face {
             font-family: 'Courier Prime';
@@ -30,6 +33,7 @@
             font-weight: 400;
             font-style: italic;
             font-display: swap;
+            unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF;
         }
         @font-face {
             font-family: 'Courier Prime';
@@ -38,6 +42,7 @@
             font-weight: 700;
             font-style: italic;
             font-display: swap;
+            unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF;
         }
         :root {
             --hoi4-bg: #1a1a1a; --hoi4-panel: #242424; --hoi4-green: #4b5320;
