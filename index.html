@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WR.Forge</title>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Noto+Sans:wght@400;700&display=swap&subset=cyrillic,latin" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap&subset=cyrillic,latin" rel="stylesheet">
     <style>
         :root {
             --hoi4-bg: #1a1a1a; --hoi4-panel: #242424; --hoi4-green: #4b5320;
             --hoi4-green-hover: #5a6328; --hoi4-text: #c0c0c0; --hoi4-text-bright: #e0e0e0;
             --hoi4-border: #3d3d3d; --hoi4-accent: #788a48;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', 'Noto Sans', 'Courier New', monospace !important; }
+        * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', 'JetBrains Mono', 'Courier New', monospace !important; }
         html, body { background-color: var(--hoi4-bg); color: var(--hoi4-text); line-height: 1.5; font-size: 14px; }
         body, button, input, textarea, select, a, p, div, span, label, li, ul, ol { font-family: 'Courier Prime', 'Noto Sans', 'Courier New', monospace; }
         .header { padding: 20px 24px; display: flex; align-items: center; gap: 12px; background-color: var(--hoi4-panel); border-bottom: 2px solid var(--hoi4-border); }
@@ -490,9 +490,7 @@
             if (catSearch) catSearch.placeholder = i18n[lang]['search.catalog.placeholder'];
             const newsSearch = document.querySelector('.search-bar[placeholder*="НОВОСТЯ"]');
             if (newsSearch) newsSearch.placeholder = i18n[lang]['search.news.placeholder'];
-            // font rules: ensure Courier Prime used for English pages
-            if (lang === 'en') document.documentElement.style.fontFamily = "'Courier Prime', monospace";
-            else document.documentElement.style.fontFamily = "'Courier Prime', 'Noto Sans', 'Courier New', monospace";
+            // no dynamic font-family override — CSS stack controls suitable mono font for Cyrillic
         }
 
         // auto-detect and apply
