@@ -6,14 +6,47 @@
     <title>WR.Forge</title>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap&subset=cyrillic,latin" rel="stylesheet">
     <style>
+        /* Self-hosted Courier Prime (place font files in deploy/assets/fonts/) */
+        @font-face {
+            font-family: 'Courier Prime';
+            src: url('assets/fonts/CourierPrime-Regular.woff2') format('woff2'),
+                 url('assets/fonts/CourierPrime-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Courier Prime';
+            src: url('assets/fonts/CourierPrime-Bold.woff2') format('woff2'),
+                 url('assets/fonts/CourierPrime-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Courier Prime';
+            src: url('assets/fonts/CourierPrime-Italic.woff2') format('woff2'),
+                 url('assets/fonts/CourierPrime-Italic.ttf') format('truetype');
+            font-weight: 400;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Courier Prime';
+            src: url('assets/fonts/CourierPrime-BoldItalic.woff2') format('woff2'),
+                 url('assets/fonts/CourierPrime-BoldItalic.ttf') format('truetype');
+            font-weight: 700;
+            font-style: italic;
+            font-display: swap;
+        }
         :root {
             --hoi4-bg: #1a1a1a; --hoi4-panel: #242424; --hoi4-green: #4b5320;
             --hoi4-green-hover: #5a6328; --hoi4-text: #c0c0c0; --hoi4-text-bright: #e0e0e0;
             --hoi4-border: #3d3d3d; --hoi4-accent: #788a48;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', 'JetBrains Mono', 'Courier New', monospace !important; }
+        * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', monospace !important; }
         html, body { background-color: var(--hoi4-bg); color: var(--hoi4-text); line-height: 1.5; font-size: 14px; }
-        body, button, input, textarea, select, a, p, div, span, label, li, ul, ol { font-family: 'Courier Prime', 'Noto Sans', 'Courier New', monospace; }
+        body, button, input, textarea, select, a, p, div, span, label, li, ul, ol { font-family: 'Courier Prime', monospace; }
         .header { padding: 20px 24px; display: flex; align-items: center; gap: 12px; background-color: var(--hoi4-panel); border-bottom: 2px solid var(--hoi4-border); }
         .logo-square { width: 36px; height: 36px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); object-fit: cover; display: block; }
         .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--hoi4-text-bright); text-transform: uppercase; }
