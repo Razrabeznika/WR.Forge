@@ -353,10 +353,12 @@
             // deactivate main filter buttons
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             // apply show/hide: show only items whose parent matches the category
+            const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/[aeiou]/g,'');
             const items = Array.from(grid.querySelectorAll('.catalog-item'));
             items.forEach(i => {
                 const parent = (i.dataset.parent||'').toLowerCase();
-                if (!cat || parent.includes(cat)) i.style.display = 'block';
+                const match = !cat || parent.includes(cat) || norm(parent).includes(norm(cat)) || norm(cat).includes(norm(parent));
+                if (match) i.style.display = 'block';
                 else i.style.display = 'none';
             });
             // active state for category buttons
