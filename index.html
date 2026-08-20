@@ -52,6 +52,7 @@
         .tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { font-size: 11px; color: #888; background-color: #111; padding: 4px 10px; border: 1px solid #333; text-transform: uppercase; }
         .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .parent-label { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 4px 8px; font-size: 11px; border-radius: 4px; text-transform: uppercase; z-index: 2; }
         .catalog-item { background-color: var(--hoi4-panel); border: 1px solid var(--hoi4-border); padding: 0; cursor: pointer; transition: border-color 0.15s, transform 0.1s; }
         .catalog-item:hover { border-color: var(--hoi4-accent); transform: translateY(-2px); }
         .catalog-image-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, rgba(75,83,32,0.18), rgba(120,138,72,0.08)); border-bottom: 1px solid var(--hoi4-border); overflow: hidden; }
@@ -129,6 +130,10 @@
                 <button class="filter-btn" onclick="filterType('Карта', this)">КАРТЫ</button>
                 <button class="filter-btn" onclick="filterType('Сценарий', this)">СЦЕНАРИИ</button>
                 <button class="filter-btn" onclick="filterType('Мод', this)">МОДЫ</button>
+            </div>
+            <div class="map-categories" style="margin-top:8px;">
+                <button class="category-btn" onclick="filterCategory('euro3', this)">Euro3</button>
+                <button class="category-btn" onclick="filterCategory('cheux', this)">Cheux</button>
             </div>
         </div>
         <div class="catalog-grid" id="catalogGrid">
@@ -303,6 +308,57 @@
                 document.body.style.overflow = 'auto';
             }
         }
+        // add parent labels to scenario cards and prepare category filter
+        function addScenarioLabels() {
+            document.querySelectorAll('.catalog-item').forEach(item => {
+                try {
+                    const type = (item.dataset.type||'').toLowerCase();
+                    if (type === 'сценарий' || type === 'сценарии' || type === 'сценарий') {
+                        const titleEl = item.querySelector('.catalog-title');
+                        const title = titleEl ? titleEl.innerText : '';
+                        let parent = '';
+                        if (title && title.indexOf('|') !== -1) parent = title.split('|')[0].trim();
+                        else parent = title.split(' ')[0].trim();
+                        parent = parent || '';
+                        // create label
+                        const wrap = item.querySelector('.catalog-image-wrap');
+                        if (wrap && parent) {
+                            const label = document.createElement('div');
+                            label.className = 'parent-label';
+                            label.innerText = parent;
+                            wrap.style.position = 'relative';
+                            wrap.appendChild(label);
+                            // store parent key for filtering
+                            item.dataset.parent = parent.toLowerCase();
+                        }
+                    } else {
+                        // for maps, set parent as map title's main token
+                        const titleEl = item.querySelector('.catalog-title');
+                        const title = titleEl ? titleEl.innerText : '';
+                        const key = (title && title.indexOf('|')!==-1) ? title.split('|')[0].trim().toLowerCase() : (title||'').toLowerCase();
+                        if (key) item.dataset.parent = key;
+                    }
+                } catch(e){/*ignore*/}
+            });
+        }
+
+        function filterCategory(category, btn) {
+            const grid = document.getElementById('catalogGrid');
+            if (!grid) return;
+            // normalize
+            const cat = String(category||'').toLowerCase();
+            // collect items preserving current order
+            const items = Array.from(grid.querySelectorAll('.catalog-item'));
+            const matching = items.filter(i => (i.dataset.parent||'').includes(cat));
+            const others = items.filter(i => !(i.dataset.parent||'').includes(cat));
+            // move matching first (keep relative order)
+            matching.concat(others).forEach(i => grid.appendChild(i));
+            // active state
+            document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => addScenarioLabels());
         // Динамическая загрузка `data.json` временно удалена по запросу — восстановите статические заглушки вручную, если нужно.
         console.log('data.json fetch removed — static content assumed.');
     </script>
