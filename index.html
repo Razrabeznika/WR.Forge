@@ -68,6 +68,9 @@
         .modal-close:hover { background-color: var(--hoi4-green); color: #fff; }
         .modal-header-img { width: 100%; aspect-ratio: 21/9; background-color: #111; border-bottom: 2px solid var(--hoi4-border); object-fit: cover; }
         .modal-body { padding: 24px; }
+        .modal-scenarios-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
+        .scenario-btn { display: block; padding: 10px 12px; background: transparent; border: 1px solid var(--hoi4-border); color: var(--hoi4-text); text-align: left; cursor: pointer; font-family: 'Courier Prime', monospace; font-size: 13px; text-transform: none; }
+        .scenario-btn:hover { background: rgba(75,83,32,0.12); border-color: var(--hoi4-accent); color: var(--hoi4-text-bright); }
         .modal-title { font-size: 20px; font-weight: 700; color: var(--hoi4-text-bright); text-transform: uppercase; margin-bottom: 8px; }
         .modal-meta { font-size: 12px; color: var(--hoi4-accent); margin-bottom: 24px; text-transform: uppercase; }
         .download-btn { display: block; width: 100%; padding: 16px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); color: #ffffff; font-family: 'Courier Prime', monospace; font-size: 16px; font-weight: 700; text-transform: uppercase; text-align: center; cursor: pointer; margin-bottom: 24px; text-decoration: none; letter-spacing: 1px; }
@@ -223,6 +226,10 @@
                 <a href="#" id="modalDownload" class="download-btn" target="_blank" rel="noopener">СКАЧАТЬ ФАЙЛ</a>
                 <div class="modal-section-title">ОПИСАНИЕ</div>
                 <p id="modalDesc" style="margin-bottom: 24px; font-size: 13px; line-height: 1.6; white-space: pre-wrap;"></p>
+                <div id="modalScenarios" style="display:none;">
+                    <div class="modal-section-title">Сценарии для этой карты</div>
+                    <div class="modal-scenarios-grid" id="modalScenariosGrid"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -305,6 +312,47 @@
             }
             document.getElementById('catalogModal').classList.add('active');
             document.body.style.overflow = 'hidden';
+            // populate scenarios list only when opening a map
+            try {
+                const modalScenarios = document.getElementById('modalScenarios');
+                const modalGrid = document.getElementById('modalScenariosGrid');
+                if (modalGrid) modalGrid.innerHTML = '';
+                if (modalScenarios) modalScenarios.style.display = 'none';
+                const t = String(type||'').toLowerCase();
+                if (t === 'карта' || t === 'карты' || t === 'map') {
+                    const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/[aeiou]/g,'');
+                    const key = String(title||'').toLowerCase();
+                    const items = Array.from(document.querySelectorAll('.catalog-item'));
+                    const scenarios = items.filter(i => {
+                        const it = (i.dataset.type||'').toLowerCase();
+                        if (it !== 'сценарий' && it !== 'сценарии') return false;
+                        const parent = (i.dataset.parent||'').toLowerCase();
+                        return parent.includes(key) || norm(parent).includes(norm(key)) || norm(key).includes(norm(parent));
+                    });
+                    if (scenarios.length && modalGrid && modalScenarios) {
+                        scenarios.forEach(s => {
+                            const sTitle = s.querySelector('.catalog-title') ? s.querySelector('.catalog-title').innerText : 'Сценарий';
+                            const sFile = s.dataset.file || '#';
+                            const a = document.createElement('a');
+                            a.className = 'scenario-btn';
+                            a.href = sFile;
+                            a.target = '_blank';
+                            a.rel = 'noopener';
+                            // download name
+                            try {
+                                const m = String(sFile).match(/\.([a-z0-9]+)(?:\?.*)?$/i);
+                                const ext = m ? m[1] : '';
+                                const safe = String(sTitle||'scenario').replace(/[^a-z0-9.\-_]/gi, '_');
+                                const dn = ext ? `${safe}.${ext}` : safe;
+                                a.setAttribute('download', dn);
+                            } catch(e){/*ignore*/}
+                            a.innerText = sTitle;
+                            modalGrid.appendChild(a);
+                        });
+                        modalScenarios.style.display = 'block';
+                    }
+                }
+            } catch(e){/*ignore*/}
         }
         function closeModal(event) {
             if (!event || event.target.id === 'catalogModal' || event.target.classList.contains('modal-close')) {
@@ -317,7 +365,19 @@
             document.querySelectorAll('.catalog-item').forEach(item => {
                 try {
                     const type = (item.dataset.type||'').toLowerCase();
-                    if (type === 'сценарий' || type === 'сценарии' || type === 'сценарий') {
+                    // extract file/img from onclick if present
+                    const onclick = item.getAttribute('onclick') || '';
+                    try {
+                        const parts = onclick.match(/'([^']*)'/g) || [];
+                        if (parts.length >= 2) {
+                            // second-to-last is file, last is img (based on current markup)
+                            const file = parts[parts.length-2].slice(1, -1);
+                            const img = parts[parts.length-1].slice(1, -1);
+                            if (file) item.dataset.file = file;
+                            if (img) item.dataset.img = img;
+                        }
+                    } catch(e){/*ignore*/}
+                    if (type === 'сценарий' || type === 'сценарии') {
                         const titleEl = item.querySelector('.catalog-title');
                         const title = titleEl ? titleEl.innerText : '';
                         let parent = '';
