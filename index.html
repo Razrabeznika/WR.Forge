@@ -132,8 +132,8 @@
                 <button class="filter-btn" onclick="filterType('Мод', this)">МОДЫ</button>
             </div>
             <div class="map-categories" style="margin-top:8px;">
-                <button class="category-btn" onclick="filterCategory('euro3', this)">Euro3</button>
-                <button class="category-btn" onclick="filterCategory('cheux', this)">Cheux</button>
+                <button class="filter-btn category-btn" onclick="filterCategory('euro3', this)">Euro3</button>
+                <button class="filter-btn category-btn" onclick="filterCategory('cheaux', this)">Cheaux</button>
             </div>
         </div>
         <div class="catalog-grid" id="catalogGrid">
@@ -257,11 +257,15 @@
             items.forEach(item => { item.style.display = item.innerText.toLowerCase().includes(lowerQuery) ? 'block' : 'none'; });
         }
         function filterType(type, btn) {
+            // clear category selection when switching main filters
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if (btn) btn.classList.add('active');
             const items = document.querySelectorAll('.catalog-item');
+            const lower = String(type||'').toLowerCase();
             items.forEach(item => {
-                if (type === 'Все' || item.dataset.type === type) item.style.display = 'block';
+                const itType = (item.dataset.type||'').toLowerCase();
+                if (type === 'Все' || itType === lower) item.style.display = 'block';
                 else item.style.display = 'none';
             });
         }
@@ -345,15 +349,17 @@
         function filterCategory(category, btn) {
             const grid = document.getElementById('catalogGrid');
             if (!grid) return;
-            // normalize
             const cat = String(category||'').toLowerCase();
-            // collect items preserving current order
+            // deactivate main filter buttons
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            // apply show/hide: show only items whose parent matches the category
             const items = Array.from(grid.querySelectorAll('.catalog-item'));
-            const matching = items.filter(i => (i.dataset.parent||'').includes(cat));
-            const others = items.filter(i => !(i.dataset.parent||'').includes(cat));
-            // move matching first (keep relative order)
-            matching.concat(others).forEach(i => grid.appendChild(i));
-            // active state
+            items.forEach(i => {
+                const parent = (i.dataset.parent||'').toLowerCase();
+                if (!cat || parent.includes(cat)) i.style.display = 'block';
+                else i.style.display = 'none';
+            });
+            // active state for category buttons
             document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
             if (btn) btn.classList.add('active');
         }
