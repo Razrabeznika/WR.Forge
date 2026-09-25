@@ -60,6 +60,7 @@
         .header { padding: 0; background-color: var(--hoi4-panel); border-bottom: 2px solid var(--hoi4-border); }
         .header-inner, .nav-inner { width: var(--site-shell); margin: 0 auto; }
         .header-inner { padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+        img { loading: lazy; }
         .logo-square { width: 36px; height: 36px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); object-fit: cover; display: block; }
         .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--hoi4-text-bright); text-transform: uppercase; }
         .nav { background-color: var(--hoi4-panel); border-bottom: 1px solid var(--hoi4-border); position: sticky; top: 0; z-index: 100; }
@@ -633,14 +634,89 @@
             // no dynamic font-family override — CSS stack controls suitable mono font for Cyrillic
         }
 
+        function extractAssetUrlsFromOnclick(onclick) {
+            const matches = onclick.match(/'([^']*)'/g) || [];
+            return matches.map(v => v.replace(/^'|'$/g, '')).filter(Boolean);
+        }
+
+        async function preloadAssetList(urls, type) {
+            const unique = [...new Set(urls.filter(Boolean))];
+            for (const url of unique) {
+                try {
+                    if (type === 'image') {
+                        await new Promise((resolve) => {
+                            const img = new Image();
+                            img.onload = () => resolve();
+                            img.onerror = () => resolve();
+                            img.src = url;
+                        });
+                        continue;
+                    }
+                    await fetch(url, { method: 'HEAD', cache: 'force-cache' }).catch(() => Promise.resolve());
+                } catch (e) {
+                    // ignore transient errors and continue with the next asset
+                }
+            }
+        }
+
+        function scheduleAssetPriorityLoad() {
+            const items = document.querySelectorAll('.catalog-item');
+            const imageUrls = [];
+            const scenarioUrls = [];
+            const mapUrls = [];
+            const zipUrls = [];
+
+            document.querySelectorAll('img[src]').forEach(img => {
+                const src = img.getAttribute('src');
+                if (src && !src.includes('/maps/') && !src.includes('.json') && !src.endsWith('.zip')) {
+                    imageUrls.push(src);
+                }
+            });
+
+            items.forEach(item => {
+                const type = (item.dataset.type || '').toLowerCase();
+                const onclick = item.getAttribute('onclick') || '';
+                const urls = extractAssetUrlsFromOnclick(onclick);
+                const file = urls[urls.length - 2] || item.dataset.file || '';
+                const image = urls[urls.length - 1] || item.dataset.img || '';
+
+                if (image) imageUrls.push(image);
+                if (type.includes('сценар') || type.includes('scenario')) {
+                    if (file) scenarioUrls.push(file);
+                }
+                if (type.includes('карта') || type.includes('map')) {
+                    if (file) mapUrls.push(file);
+                }
+                if (type.includes('мод') || type.includes('mod')) {
+                    if (file) zipUrls.push(file);
+                }
+            });
+
+            setTimeout(() => {
+                preloadAssetList(imageUrls, 'image');
+            }, 100);
+
+            setTimeout(() => {
+                preloadAssetList(scenarioUrls, 'json');
+            }, 500);
+
+            setTimeout(() => {
+                preloadAssetList(mapUrls, 'map');
+            }, 1200);
+
+            setTimeout(() => {
+                preloadAssetList(zipUrls, 'zip');
+            }, 2200);
+        }
+
         // auto-detect and apply
         document.addEventListener('DOMContentLoaded', () => {
             addScenarioLabels();
+            scheduleAssetPriorityLoad();
             const userLang = navigator.language || navigator.userLanguage || 'ru';
             applyLocale(userLang.toLowerCase());
         });
 
-        document.addEventListener('DOMContentLoaded', () => addScenarioLabels());
         // Динамическая загрузка `data.json` временно удалена по запросу — восстановите статические заглушки вручную, если нужно.
         console.log('data.json fetch removed — static content assumed.');
     </script>
