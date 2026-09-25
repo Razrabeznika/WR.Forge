@@ -50,7 +50,11 @@
             --hoi4-border: #3d3d3d; --hoi4-accent: #788a48;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', monospace !important; }
-        html, body { background-color: var(--hoi4-bg); color: var(--hoi4-text); line-height: 1.5; font-size: 14px; }
+        html, body { background-color: var(--hoi4-bg); color: var(--hoi4-text); line-height: 1.5; font-size: 14px; scrollbar-color: var(--hoi4-accent) var(--hoi4-bg); scrollbar-width: thin; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar, .modal-content::-webkit-scrollbar { width: 9px; height: 9px; }
+        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track, .modal-content::-webkit-scrollbar-track { background: var(--hoi4-bg); }
+        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb, .modal-content::-webkit-scrollbar-thumb { background: rgba(120, 138, 72, 0.8); border: 1px solid rgba(255,255,255,0.08); }
+        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, .modal-content::-webkit-scrollbar-thumb:hover { background: var(--hoi4-accent); }
         body, button, input, textarea, select, a, p, div, span, label, li, ul, ol { font-family: 'Courier Prime', monospace; }
         .header { padding: 20px 24px; display: flex; align-items: center; gap: 12px; background-color: var(--hoi4-panel); border-bottom: 2px solid var(--hoi4-border); }
         .logo-square { width: 36px; height: 36px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); object-fit: cover; display: block; }
