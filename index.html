@@ -106,8 +106,8 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal-content { background-color: var(--hoi4-panel); border: 2px solid var(--hoi4-accent); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; }
-        .modal-close { position: absolute; top: 12px; right: 12px; background: none; border: 1px solid var(--hoi4-border); color: var(--hoi4-text); width: 32px; height: 32px; cursor: pointer; font-family: 'Courier Prime', monospace; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        .modal-close:hover { background-color: var(--hoi4-green); color: #fff; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background-color: var(--hoi4-panel); border: 1px solid var(--hoi4-border); color: var(--hoi4-text-bright); width: 32px; height: 32px; cursor: pointer; font-family: 'Courier Prime', monospace; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02); }
+        .modal-close:hover { background-color: var(--hoi4-green); border-color: var(--hoi4-accent); color: #fff; }
         .modal-header-img { width: 100%; aspect-ratio: 21/9; background-color: #111; border-bottom: 2px solid var(--hoi4-border); object-fit: cover; }
         .modal-body { padding: 24px; }
         .modal-scenarios-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
