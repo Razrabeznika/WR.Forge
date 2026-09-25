@@ -48,6 +48,7 @@
             --hoi4-bg: #1a1a1a; --hoi4-panel: #242424; --hoi4-green: #4b5320;
             --hoi4-green-hover: #5a6328; --hoi4-text: #c0c0c0; --hoi4-text-bright: #e0e0e0;
             --hoi4-border: #3d3d3d; --hoi4-accent: #788a48;
+            --site-shell: min(1000px, calc(100vw - 48px));
         }
         * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; font-family: 'Courier Prime', monospace !important; }
         html, body { background-color: var(--hoi4-bg); color: var(--hoi4-text); line-height: 1.5; font-size: 14px; scrollbar-color: var(--hoi4-accent) var(--hoi4-bg); scrollbar-width: thin; }
@@ -57,7 +58,7 @@
         html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, .modal-content::-webkit-scrollbar-thumb:hover { background: var(--hoi4-accent); }
         body, button, input, textarea, select, a, p, div, span, label, li, ul, ol { font-family: 'Courier Prime', monospace; }
         .header { padding: 0; background-color: var(--hoi4-panel); border-bottom: 2px solid var(--hoi4-border); }
-        .header-inner, .nav-inner { max-width: 1000px; width: 100%; margin: 0 auto; }
+        .header-inner, .nav-inner { width: var(--site-shell); margin: 0 auto; }
         .header-inner { padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
         .logo-square { width: 36px; height: 36px; background-color: var(--hoi4-green); border: 2px solid var(--hoi4-accent); object-fit: cover; display: block; }
         .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--hoi4-text-bright); text-transform: uppercase; }
@@ -74,7 +75,7 @@
             .nav-btn.active { border: 1px solid var(--hoi4-accent); border-bottom: 3px solid var(--hoi4-accent); }
             .nav-btn svg { width: 20px; height: 20px; }
         }
-        .content { padding: 32px 24px; max-width: 1000px; margin: 0 auto; display: none; }
+        .content { padding: 32px 24px; width: var(--site-shell); margin: 0 auto; display: none; }
         .content.active { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .about-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px; }
