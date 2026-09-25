@@ -84,6 +84,15 @@
       "description": "Сценарий Cheux: Vertland Civil War.",
       "file": "assets/img/maps/scenarios/vertlandcivilwar.json",
       "image": "assets/img/civilcheaux.jpg"
+    },
+    {
+      "title": "WR Forge v0.0.1 Coal Update",
+      "type": "Мод",
+      "rating": "Mod",
+      "reviews": "0",
+      "description": "Мод-обновление WR Forge Coal Update. Устанавливается как zip-архив и включает изменения для текущего набора карт и сценариев.",
+      "file": "assets/maps/WR_Forge_v_0_0_1.zip",
+      "image": "assets/img/WR_Forge_Mod_0_0_1_Coal_Update.jpg"
     }
   ]
 }
