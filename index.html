@@ -124,7 +124,8 @@
         .modal-markdown p { margin: 10px 0; }
         .modal-markdown ul { margin: 10px 0 16px 18px; padding-left: 18px; }
         .modal-markdown li { margin-bottom: 6px; }
-        .modal-markdown a { color: var(--hoi4-accent); text-decoration: underline; }
+        .modal-markdown a { color: var(--hoi4-green); text-decoration: underline; font-weight: 700; }
+        .modal-markdown a:hover { color: var(--hoi4-green-hover); }
         .footer { margin-top: 64px; padding: 32px 24px; border-top: 2px solid var(--hoi4-border); background-color: var(--hoi4-panel); text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
         .footer-link { color: var(--hoi4-text); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--hoi4-border); padding: 8px 16px; transition: all 0.15s; }
@@ -279,7 +280,7 @@
                 </div>
             </div>
 
-            <div class="catalog-item" data-type="Мод" onclick="openModal('WR.Forge v0.0.1 Coal Update', 'Мод', 'Mod', '0', '# Новый ресурс &quot;Уголь&quot;\n\nИспользуется пока что только для работы сталелитейного завода\n\n## Новая постройка: &quot;Угольная шахта&quot;\n- Добывает ресурс Уголь\n- Новая ветка технологий &quot;Угольная шахта&quot;\n- Разблокирует три уровня постройки Угольной шахты\n\n## Помимо основного обновления:\n- Изменение графики иконок построек и загрузочных экранов\n- Изменение цвета воды на карте\n- Удаление реформы на папу римского\n- Часть пака [QoL Pack](https://discord.com/channels/1016359140832071751/1543594978486394971) 🦝 на изменение цвета вассалов от Енота\n\nСсылка на пакет [QoL Pack](https://discord.com/channels/1016359140832071751/1543594978486394971)', 'assets/maps/WR_Forge_v_0_0_1.zip', 'assets/img/WR_Forge_Mod_0_0_1_Coal_Update.jpg')">
+            <div class="catalog-item" data-type="Мод" onclick="openModal('WR.Forge v0.0.1 Coal Update', 'Мод', 'Mod', '0', '# Новый ресурс &quot;Уголь&quot;\n\nИспользуется пока что только для работы сталелитейного завода\n\n## Новая постройка: &quot;Угольная шахта&quot;\n- Добывает ресурс Уголь\n- Новая ветка технологий &quot;Угольная шахта&quot;\n- Разблокирует три уровня постройки Угольной шахты\n\n## Помимо основного обновления:\n- Изменение графики иконок построек и загрузочных экранов\n- Изменение цвета воды на карте\n- Удаление реформы на папу римского\n- Часть пака [QoL Pack](https://discord.com/channels/1016359140832071751/1543594978486394971) 🦝 на изменение цвета вассалов от Енота', 'assets/maps/WR_Forge_v_0_0_1.zip', 'assets/img/WR_Forge_Mod_0_0_1_Coal_Update.jpg')">
                 <div class="catalog-image-wrap"><img src="assets/img/WR_Forge_Mod_0_0_1_Coal_Update.jpg" class="catalog-img" alt="WR.Forge v0.0.1 Coal Update"></div>
                 <div class="catalog-info">
                     <div class="catalog-title">WR.Forge v0.0.1 Coal Update</div>
@@ -370,9 +371,17 @@
             };
 
             const formatInline = (value) => {
+                const placeholders = [];
                 let formatted = escapeHtml(value);
-                formatted = formatted.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-                formatted = formatted.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+
+                formatted = formatted.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (_, label, url) => {
+                    const token = `__MD_LINK_${placeholders.length}__`;
+                    placeholders.push(`<a href="${url}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`);
+                    return token;
+                });
+
+                formatted = formatted.replace(/(https?:\/\/[^\s<>'")]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+                formatted = formatted.replace(/__MD_LINK_(\d+)__/g, (_, index) => placeholders[Number(index)]);
                 return formatted;
             };
 
